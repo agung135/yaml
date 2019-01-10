@@ -4,8 +4,8 @@ esphomeyaml:
   board: esp_wroom_02
 
 wifi:
-  ssid: 'polytron315'
-  password: 'memangcanggih135'
+  ssid: 'ssid'
+  password: 'pass'
   manual_ip:
     static_ip: 192.168.2.100
     gateway: 192.168.2.1
@@ -15,14 +15,14 @@ mqtt:
   broker: '192.168.2.5'
   discovery: True
   port: 1883
-  username: 'agex'
-  password: 'justforagex'
+  username: 'user'
+  password: 'pass'
 
 # Enable logging
 logger:
 
 ota:
-  password: 'justforagex'
+  password: 'pass'
   
 time:
   - platform: sntp
