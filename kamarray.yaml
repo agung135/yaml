@@ -1,0 +1,103 @@
+esphomeyaml:
+  name: kamarray
+  platform: ESP8266
+  board: esp_wroom_02
+
+wifi:
+  ssid: 'polytron315'
+  password: 'memangcanggih135'
+  manual_ip:
+    static_ip: 192.168.2.100
+    gateway: 192.168.2.1
+    subnet: 255.255.255.0
+
+mqtt:
+  broker: '192.168.2.5'
+  discovery: True
+  port: 1883
+  username: 'agex'
+  password: 'justforagex'
+
+# Enable logging
+logger:
+
+ota:
+  password: 'justforagex'
+  
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: 'Asia/Jakarta'
+    servers:
+      - time.nist.gov
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Button 1"
+    on_press:
+      lambda: !lambda >-
+        ESP_LOGD("JAM", "Jam");
+
+  - platform: gpio
+    pin:
+      number: 2
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Button 2"
+  - platform: gpio
+    pin:
+      number: 16
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Button 3"
+  - platform: gpio
+    pin:
+      number: 14
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Button 4"
+  - platform: status
+    name: "Sonoff 4CH Status"
+
+switch:
+  - platform: gpio
+    name: "Relay 1"
+    pin: 12
+    id: relay1
+  - platform: gpio
+    name: "Relay 2"
+    pin: 5
+    id: relay2
+  - platform: gpio
+    name: "Relay 3"
+    pin: 4
+  - platform: gpio
+    name: "Relay 4"
+    pin: 15
+
+output:
+  # Register the blue LED as a dimmable output ....
+  - platform: esp8266_pwm
+    id: blue_led
+    pin: 13
+    inverted: False
+
+light:
+  # ... and then make a light out of it.
+  - platform: monochromatic
+    name: "Blue LED"
+    output: blue_led
+
+text_sensor:
+  - platform: template
+    name: "Current time"
+    lambda: |-
+      char str[17];
+      time_t currTime = id(sntp_time).utcnow().time;
+      strftime(str, sizeof(str), "%Y-%m-%d %H:%M", localtime(&currTime));
+      return { str };
+    update_interval: 15s
